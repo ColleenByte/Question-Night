@@ -183,6 +183,10 @@ button:disabled {
   letter-spacing: 2px;
 }
 
+.card.cam-2::before {
+  content: "CAM 02";
+}
+
 .card::after {
   content: "\25CF  REC";
   position: absolute;
@@ -300,7 +304,9 @@ textarea::placeholder {
   body::after,
   h1,
   .card::after,
-  .result {
+  .result,
+  .locked .lock-icon,
+  .locked .denied {
     animation: none;
   }
 }
@@ -351,4 +357,36 @@ textarea::placeholder {
   .question-list {
     max-height: 45vh;
   }
+}
+
+/* Locked pull page */
+.lock-icon {
+  vertical-align: -2px;
+  margin-right: 4px;
+}
+
+nav button.active .lock-icon {
+  filter: drop-shadow(0 0 4px rgba(181, 123, 255, 0.6));
+}
+
+.locked {
+  text-align: center;
+}
+
+/* Same colour split glow as the title */
+.locked .lock-icon {
+  display: block;
+  margin: 16px auto 0;
+  color: var(--red);
+  filter: drop-shadow(3px 0 0 rgba(255, 0, 0, 0.5))
+    drop-shadow(-3px 0 0 rgba(0, 200, 255, 0.35))
+    drop-shadow(0 0 10px rgba(255, 42, 42, 0.6));
+  animation: flicker 3s infinite;
+}
+
+.locked .denied {
+  color: var(--red);
+  font-size: 40px;
+  text-shadow: 0 0 8px rgba(255, 42, 42, 0.6);
+  animation: blink 1.2s steps(1) infinite;
 }

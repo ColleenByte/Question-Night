@@ -55,14 +55,10 @@ function AddQuestion({ categories, questions, onAdd }) {
 
       {message && <p className="message">{message}</p>}
 
-      <h3>Saved Questions ({questions.length})</h3>
-      <ul className="question-list">
-        {questions.map((q) => (
-          <li key={q.id}>
-            <span className="tag">{q.category}</span> {q.text}
-          </li>
-        ))}
-      </ul>
+      <h3>
+        {questions.length} {questions.length === 1 ? "question" : "questions"}{" "}
+        in the box
+      </h3>
     </div>
   );
 }

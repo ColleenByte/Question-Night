@@ -11,6 +11,7 @@ import { db } from "./firebase.js";
 import AddQuestion from "./components/AddQuestion.jsx";
 import RandomQuestion from "./components/RandomQuestion.jsx";
 import Nose from "./components/Nose.jsx";
+import Locked, { LockIcon } from "./components/Locked.jsx";
 
 const CATEGORIES = [
   "General",
@@ -20,6 +21,9 @@ const CATEGORIES = [
   "Hypotheticals",
   "Misc",
 ];
+
+// Pulling questions opens at midnight (local time) on November 28th 2026
+const UNLOCK_DATE = new Date(2026, 10, 28);
 
 function App() {
   const [page, setPage] = useState("add");
@@ -71,9 +75,11 @@ function App() {
   // Pool is every question not yet pulled
   const pool = questions.filter((q) => !pulledIds.includes(q.id));
 
+  const isLocked = new Date() < UNLOCK_DATE;
+
   return (
     <div className="app">
-      <h1>Question Pool</h1>
+      <h1>The Lounge Q&amp;A</h1>
 
       <nav>
         <button
@@ -86,7 +92,7 @@ function App() {
           className={page === "random" ? "active" : ""}
           onClick={() => setPage("random")}
         >
-          Pull Random Question
+          {isLocked && <LockIcon />} Pull Random Question
         </button>
       </nav>
 
@@ -100,6 +106,8 @@ function App() {
             questions={questions}
             onAdd={addQuestion}
           />
+        ) : isLocked ? (
+          <Locked unlockDate={UNLOCK_DATE} />
         ) : (
           <RandomQuestion
             categories={CATEGORIES}

@@ -22,7 +22,7 @@ function RandomQuestion({ categories, pool, onPull }) {
   }
 
   return (
-    <div className="card">
+    <div className="card cam-2">
       <h2>Pull a Random Question</h2>
 
       <label>Category</label>

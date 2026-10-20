@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /questions/{id} {
+      // Anyone can read and add, nobody can edit or delete
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['text', 'category', 'createdAt'])
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 300
+        && request.resource.data.category in ['General', 'Personal', 'Funny', 'Hot Takes / Opinion', 'Hypotheticals', 'Misc']
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+  }
+}

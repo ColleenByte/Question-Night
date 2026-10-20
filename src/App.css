@@ -1,0 +1,354 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+:root {
+  --bg: #050505;
+  --panel: #0f0d12;
+  --text: #d8c8e6;
+  --dim: #7d6b8f;
+  --purple: #b57bff;
+  --red: #ff2a2a;
+  --border: #2f2a38;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  color: var(--text);
+  background-color: var(--bg);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Background on its own fixed layer (fixed backgrounds break on phones) */
+#root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(ellipse at center, rgba(15, 5, 25, 0.75) 0%, rgba(5, 0, 10, 0.95) 80%),
+    url("./assets/background.jpg");
+  background-size: cover;
+  background-position: 85% center;
+}
+
+/* Scanlines over the whole screen */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.35) 3px
+  );
+}
+
+/* Camera static */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  pointer-events: none;
+  z-index: 11;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: static 0.4s steps(4) infinite;
+}
+
+@keyframes static {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-5%, 3%); }
+  50% { transform: translate(4%, -4%); }
+  75% { transform: translate(-3%, -2%); }
+  100% { transform: translate(2%, 5%); }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.4; }
+  94% { opacity: 1; }
+  97% { opacity: 0.7; }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.app {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 56px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #e8e8e0;
+  margin: 10px 0 24px;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.4), 3px 0 0 rgba(255, 0, 0, 0.4),
+    -3px 0 0 rgba(0, 200, 255, 0.3);
+  animation: flicker 4s infinite;
+}
+
+h2,
+h3 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: normal;
+  color: var(--purple);
+  text-shadow: 0 0 6px rgba(181, 123, 255, 0.5);
+}
+
+h2 {
+  font-size: 30px;
+  margin-top: 4px;
+}
+
+nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+nav button {
+  flex: 1;
+  background-color: transparent;
+  color: var(--dim);
+  border: 2px solid var(--border);
+}
+
+nav button.active {
+  color: var(--purple);
+  border-color: var(--purple);
+  box-shadow: 0 0 10px rgba(181, 123, 255, 0.3), inset 0 0 10px rgba(181, 123, 255, 0.15);
+}
+
+button {
+  font-family: "VT323", monospace;
+  font-size: 22px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border: 2px solid var(--red);
+  border-radius: 0;
+  background-color: #1a0505;
+  color: var(--red);
+  cursor: pointer;
+  transition: background-color 0.15s, box-shadow 0.15s;
+}
+
+/* Only on devices with a mouse */
+@media (hover: hover) {
+  button:hover:not(:disabled) {
+    background-color: var(--red);
+    color: #000;
+    box-shadow: 0 0 14px rgba(255, 42, 42, 0.6);
+  }
+}
+
+button:disabled {
+  border-color: var(--border);
+  color: #444;
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+/* Each card looks like a camera feed */
+.card {
+  position: relative;
+  z-index: 1;
+  background-color: var(--panel);
+  padding: 44px 20px 20px;
+  border: 2px solid var(--border);
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.card::before {
+  content: "CAM 01";
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  color: #e8e8e0;
+  letter-spacing: 2px;
+}
+
+.card::after {
+  content: "\25CF  REC";
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  color: var(--red);
+  letter-spacing: 2px;
+  animation: blink 1.2s steps(1) infinite;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
+  display: block;
+  margin-top: 8px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  color: var(--purple);
+  background-color: #000;
+  border: 2px solid var(--border);
+  border-radius: 0;
+  margin-bottom: 8px;
+}
+
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--purple);
+}
+
+textarea::placeholder {
+  color: #4a3b58;
+}
+
+.message {
+  color: var(--purple);
+}
+
+.error {
+  color: var(--red);
+  text-shadow: 0 0 6px rgba(255, 42, 42, 0.5);
+}
+
+.question-list {
+  padding-left: 0;
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.question-list li {
+  overflow-wrap: anywhere;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.tag {
+  display: inline-block;
+  border: 1px solid var(--red);
+  color: var(--red);
+  padding: 0 8px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: #000;
+  border: 2px solid var(--purple);
+  box-shadow: 0 0 16px rgba(181, 123, 255, 0.25);
+  animation: flicker 3s infinite;
+}
+
+.result p {
+  overflow-wrap: anywhere;
+  font-size: 28px;
+  margin: 10px 0 0;
+  color: #e8e8e0;
+}
+
+/* Invisible button over the rabbit's nose on the poster */
+.nose {
+  position: fixed;
+  z-index: 0;
+  padding: 0;
+  min-height: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.nose:hover:not(:disabled),
+.nose:focus-visible {
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after,
+  h1,
+  .card::after,
+  .result {
+    animation: none;
+  }
+}
+
+/* Phones */
+@media (max-width: 600px) {
+  body {
+    font-size: 18px;
+  }
+
+  .app {
+    padding: 16px 12px;
+  }
+
+  h1 {
+    font-size: 38px;
+    letter-spacing: 2px;
+    margin: 4px 0 16px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  nav button {
+    font-size: 18px;
+    padding: 12px 6px;
+    letter-spacing: 1px;
+  }
+
+  .card {
+    padding: 40px 14px 16px;
+  }
+
+  button {
+    min-height: 48px;
+  }
+
+  select,
+  textarea {
+    font-size: 18px;
+  }
+
+  .result p {
+    font-size: 24px;
+  }
+
+  .question-list {
+    max-height: 45vh;
+  }
+}

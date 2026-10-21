@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import {
   collection,
   addDoc,
+  deleteDoc,
+  doc,
   onSnapshot,
   orderBy,
   query,
@@ -27,6 +29,8 @@ const UNLOCK_DATE = new Date(2026, 10, 28);
 
 function App() {
   const [page, setPage] = useState("add");
+  // Admin password entered this visit (cleared on refresh)
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // All questions from the online database
   const [questions, setQuestions] = useState([]);
@@ -68,6 +72,10 @@ function App() {
     });
   }
 
+  async function deleteQuestion(id) {
+    await deleteDoc(doc(db, "questions", id));
+  }
+
   function removeFromPool(id) {
     setPulledIds([...pulledIds, id]);
   }
@@ -75,7 +83,7 @@ function App() {
   // Pool is every question not yet pulled
   const pool = questions.filter((q) => !pulledIds.includes(q.id));
 
-  const isLocked = new Date() < UNLOCK_DATE;
+  const isLocked = new Date() < UNLOCK_DATE && !isAdmin;
 
   return (
     <div className="app">
@@ -107,12 +115,13 @@ function App() {
             onAdd={addQuestion}
           />
         ) : isLocked ? (
-          <Locked unlockDate={UNLOCK_DATE} />
+          <Locked unlockDate={UNLOCK_DATE} onUnlock={() => setIsAdmin(true)} />
         ) : (
           <RandomQuestion
             categories={CATEGORIES}
             pool={pool}
             onPull={removeFromPool}
+            onDelete={deleteQuestion}
           />
         ))}
 

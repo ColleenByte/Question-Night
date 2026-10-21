@@ -212,7 +212,8 @@ label {
 }
 
 select,
-textarea {
+textarea,
+input {
   width: 100%;
   padding: 8px;
   font-family: "VT323", monospace;
@@ -225,7 +226,8 @@ textarea {
 }
 
 select:focus,
-textarea:focus {
+textarea:focus,
+input:focus {
   outline: none;
   border-color: var(--purple);
 }
@@ -282,6 +284,33 @@ textarea::placeholder {
   color: #e8e8e0;
 }
 
+/* "Question has been asked" button under a pulled question */
+.result button {
+  margin-top: 16px;
+  font-size: 18px;
+  padding: 6px 12px;
+}
+
+/* Lit up like an alarm while waiting for the second click */
+.result .confirm-btn {
+  background-color: var(--red);
+  color: #000;
+  box-shadow: 0 0 14px rgba(255, 42, 42, 0.6);
+}
+
+/* Jolts sideways with a colour split, like a camera cutting out */
+.glitch {
+  animation: glitch 0.4s steps(2) 1;
+}
+
+@keyframes glitch {
+  0% { transform: translate(-6px, 0); text-shadow: 3px 0 rgba(0, 200, 255, 0.7), -3px 0 rgba(255, 0, 0, 0.7); }
+  25% { transform: translate(5px, -1px); }
+  50% { transform: translate(-3px, 1px); text-shadow: -3px 0 rgba(0, 200, 255, 0.7), 3px 0 rgba(255, 0, 0, 0.7); }
+  75% { transform: translate(2px, 0); }
+  100% { transform: none; }
+}
+
 /* Invisible button over the rabbit's nose on the poster */
 .nose {
   position: fixed;
@@ -306,7 +335,8 @@ textarea::placeholder {
   .card::after,
   .result,
   .locked .lock-icon,
-  .locked .denied {
+  .locked .denied,
+  .glitch {
     animation: none;
   }
 }
@@ -346,7 +376,8 @@ textarea::placeholder {
   }
 
   select,
-  textarea {
+  textarea,
+  input {
     font-size: 18px;
   }
 
@@ -382,6 +413,33 @@ nav button.active .lock-icon {
     drop-shadow(-3px 0 0 rgba(0, 200, 255, 0.35))
     drop-shadow(0 0 10px rgba(255, 42, 42, 0.6));
   animation: flicker 3s infinite;
+}
+
+/* Old security office terminal */
+.admin-form {
+  margin-top: 24px;
+  padding: 14px;
+  text-align: left;
+  background-color: #000;
+  border: 2px dashed var(--border);
+}
+
+.admin-form .terminal-title {
+  margin: 0;
+  color: var(--dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 8px;
+}
+
+.admin-form label {
+  color: var(--purple);
+}
+
+.admin-form input {
+  letter-spacing: 6px;
+  caret-color: var(--red);
 }
 
 .locked .denied {

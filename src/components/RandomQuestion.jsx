@@ -1,8 +1,11 @@
 import { useState } from "react";
 
-function RandomQuestion({ categories, pool, onPull }) {
+function RandomQuestion({ categories, pool, onPull, onDelete }) {
   const [category, setCategory] = useState("All");
   const [current, setCurrent] = useState(null);
+  const [confirming, setConfirming] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [message, setMessage] = useState("");
 
   // Only questions in the chosen category
   const available =
@@ -18,7 +21,23 @@ function RandomQuestion({ categories, pool, onPull }) {
     const picked = available[randomIndex];
 
     setCurrent(picked);
+    setConfirming(false);
+    setMessage("");
     onPull(picked.id);
+  }
+
+  // Permanently removes the current question from the database
+  async function deleteCurrent() {
+    setDeleting(true);
+    try {
+      await onDelete(current.id);
+      setCurrent(null);
+      setMessage("Question asked. It's been removed from the box.");
+    } catch (err) {
+      setMessage("Could not delete question: " + err.message);
+    }
+    setConfirming(false);
+    setDeleting(false);
   }
 
   return (
@@ -45,8 +64,25 @@ function RandomQuestion({ categories, pool, onPull }) {
         <div className="result">
           <span className="tag">{current.category}</span>
           <p>{current.text}</p>
+
+          {/* First click asks "Are you sure?", second click removes it */}
+          {confirming ? (
+            <button
+              className="confirm-btn"
+              onClick={deleteCurrent}
+              disabled={deleting}
+            >
+              {deleting ? "Removing..." : "Are you sure?"}
+            </button>
+          ) : (
+            <button onClick={() => setConfirming(true)}>
+              Question Has Been Asked
+            </button>
+          )}
         </div>
       )}
+
+      {message && <p className="message">{message}</p>}
 
       {available.length === 0 && (
         <p className="message">

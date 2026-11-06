@@ -8,7 +8,7 @@ service cloud.firestore {
         && request.resource.data.text is string
         && request.resource.data.text.size() > 0
         && request.resource.data.text.size() <= 300
-        && request.resource.data.category in ['General', 'Personal', 'Funny', 'Hot Takes / Opinion', 'Hypotheticals', 'Misc']
+        && request.resource.data.category in ['General', 'Personal', 'Funny', 'Hot Takes / Opinion', 'Hypotheticals', 'TTRPG', 'Misc']
         && request.resource.data.createdAt == request.time;
       allow delete: if true;
       allow update: if false;

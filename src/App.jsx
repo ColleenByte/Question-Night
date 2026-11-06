@@ -21,6 +21,7 @@ const CATEGORIES = [
   "Funny",
   "Hot Takes / Opinion",
   "Hypotheticals",
+  "TTRPG",
   "Misc",
 ];
 
